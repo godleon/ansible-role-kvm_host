@@ -2,7 +2,7 @@
 services: docker
 
 # Use the new container infrastructure
-sudo: required
+sudo: yes
 
 env:
   - distro: ubuntu1604
@@ -30,7 +30,7 @@ script:
 
   - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm whoami'
 
-  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm sudo apt-get update && sudo apt-get -y install ansible python2.7'
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm apt-get update && apt-get -y install ansible python2.7'
 
   - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --syntax-check'
 
