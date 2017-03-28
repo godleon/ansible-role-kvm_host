@@ -1,7 +1,9 @@
+[![Build Status](https://travis-ci.org/godleon/ansible-role-kvm_host.svg?branch=master)](https://travis-ci.org/godleon/ansible-role-kvm_host)
+
 Role Name
 =========
 
-A brief description of the role goes here.
+Deploy KVM virtualization environment on Ubuntu 16.04(Xenial). (currently)
 
 Requirements
 ------------

@@ -1,2 +1,23 @@
 ---
 # tasks file for kvm_host
+
+- name: Install KVM-related packages
+  apt:
+    name: '{{ item }}'
+    state: 'latest'
+    update_cache: 'yes'
+  with_items:
+    - 'libvirt-bin'
+    - 'netcat-openbsd'
+    - 'gawk'
+    - 'qemu-system'
+    - 'pm-utils'
+    - 'ebtables'
+    - 'qemu-kvm'
+    - 'virtinst'
+    - 'bridge-utils'
+    - 'cpu-checker'
+    - 'openvswitch-switch'
+    - 'vlan'
+    - 'ifenslave'
+    - 'python-lxml'
