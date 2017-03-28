@@ -11,6 +11,9 @@ addons:
     packages:
     - python-pip
 
+before_install:
+  - sudo apt-get update -qq
+
 install:
   # Install ansible
   - pip install ansible
@@ -19,21 +22,33 @@ install:
   - ansible --version
 
   # Create ansible.cfg with correct roles_path
-  - printf '[defaults]\nroles_path=../' >> ansible.cfg
-  - printf '\nhost_key_checking=False' >> ansible.cfg
+  - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
+  # - printf '[defaults]\nroles_path=../' >> ansible.cfg
+  # - printf '\nhost_key_checking=False' >> ansible.cfg
 
 script:
   # Basic role syntax check
-  - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
-  - env
-  - whoami
-  - ifconfig -a
+  # - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
+  # - env
+  # - whoami
+  # - ifconfig -a
   - cd ../
   - mv ansible-role-kvm_host kvm_host
   - cd kvm_host
   # - find ../
+  
   - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
+  
   - "ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo"
+  
+  - "ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo"
+
+  - >
+    ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo
+    | grep -q 'changed=0.*failed=0'
+    && (echo 'Idempotence test: pass' && exit 0)
+    || (echo 'Idempotence test: fail' && exit 1)
+
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
