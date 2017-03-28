@@ -4,10 +4,10 @@
 sudo: required
 
 env:
-  # - distro: centos7
-  #   init: /usr/lib/systemd/systemd
-  #   run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
-  #   playbook: centos-7-test.yml
+  - distro: centos7
+    init: /usr/lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    playbook: centos-7-test.yml
   # - distro: centos6
   #   init: /sbin/init
   #   run_opts: ""
@@ -50,7 +50,7 @@ script:
 
   - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm env'
 
-  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm lsb_release -a'
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --syntax-check'
 
 
 notifications:
