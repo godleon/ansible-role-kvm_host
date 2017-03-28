@@ -17,8 +17,8 @@ services:
   - docker
 
 before_install:
-  # - sudo apt-get update -qq
-  - 'docker pull williamyeh/ansible:ubuntu16.04'
+  - 'docker pull ubuntu:xenial'
+  # - 'docker pull williamyeh/ansible:ubuntu16.04'
 
 script:
 
@@ -29,6 +29,8 @@ script:
   - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm env'
 
   - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ip addr show'
+
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ip addr apt-get update && apt-get -y install ansible python2.7'
 
   - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --syntax-check'
 
