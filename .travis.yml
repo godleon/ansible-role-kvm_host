@@ -1,30 +1,38 @@
 ---
-language: python
-python: "2.7"
 
 # Use the new container infrastructure
 sudo: required
 
+env:
+  # - distro: centos7
+  #   init: /usr/lib/systemd/systemd
+  #   run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  #   playbook: centos-7-test.yml
+  # - distro: centos6
+  #   init: /sbin/init
+  #   run_opts: ""
+  #   playbook: test.yml
+  - distro: ubuntu1604
+    init: /lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    playbook: test.yml
+  # - distro: ubuntu1404
+  #   init: /sbin/init
+  #   run_opts: ""
+  #   playbook: test.yml
+
+services:
+  - docker
+
 # Install ansible
-addons:
-  apt:
-    packages:
-    - python-pip
+# addons:
+  # apt:
+  #   packages:
+  #   - python-pip
 
 before_install:
-  - sudo apt-get update -qq
-
-install:
-  # Install ansible
-  - pip install ansible
-
-  # Check ansible version
-  - ansible --version
-
-  # Create ansible.cfg with correct roles_path
-  - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
-  # - printf '[defaults]\nroles_path=../' >> ansible.cfg
-  # - printf '\nhost_key_checking=False' >> ansible.cfg
+  # - sudo apt-get update -qq
+  - 'docker pull williamyeh/ansible:ubuntu16.04'
 
 script:
   # Basic role syntax check
@@ -32,23 +40,17 @@ script:
   # - env
   # - whoami
   # - ifconfig -a
-  - lsb_release -a
-  - cd ../
-  - mv ansible-role-kvm_host kvm_host
-  - cd kvm_host
-  # - find ../
-  
-  - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
-  
-  - "ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo"
-  
-  - "ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo"
+  - env
 
-  - >
-    ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo
-    | grep -q 'changed=0.*failed=0'
-    && (echo 'Idempotence test: pass' && exit 0)
-    || (echo 'Idempotence test: fail' && exit 1)
+  - lsb_release -a
+
+  - container_id=$(mktemp)
+
+  - 'docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} williamyeh/ansible:ubuntu16.04 "${init}" > "${container_id}"'
+
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm env'
+
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm lsb_release -a'
 
 
 notifications:
