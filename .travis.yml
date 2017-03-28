@@ -1,50 +1,55 @@
 ---
-services: docker
-
 # Use the new container infrastructure
-sudo: yes
+dist: trusty
+sudo: required
 
-env:
-  - distro: ubuntu1604
-    init: /lib/systemd/systemd
-    #run_opts: "--privileged"
-    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
-    playbook: test.yml
-  # - distro: centos7
-  #   init: /usr/lib/systemd/systemd
-  #   run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
-  #   playbook: centos-7-test.yml
+language: python
+python: "2.7"
 
-services:
-  - docker
+# Install ansible
+addons:
+  apt:
+    packages:
+    - python-pip
 
 before_install:
-  # - 'docker pull ubuntu:xenial'
-  - 'docker pull williamyeh/ansible:ubuntu16.04'
+  - sudo apt-get update -qq
+
+install:
+  # Install ansible
+  - pip install ansible
+
+  # Check ansible version
+  - ansible --version
+
+  # Create ansible.cfg with correct roles_path
+  - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
+  # - printf '[defaults]\nroles_path=../' >> ansible.cfg
+  # - printf '\nhost_key_checking=False' >> ansible.cfg
 
 script:
+  # Basic role syntax check
+  # - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
+  # - env
+  # - whoami
+  - ifconfig -a
+  - lsb_release -a
+  - cd ../
+  - mv ansible-role-kvm_host kvm_host
+  - cd kvm_host
+  # - find ../
+  
+  - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
+  
+  - "ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo"
+  
+  - "ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo"
 
-  - container_id=$(mktemp)
-
-  - 'docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} williamyeh/ansible:ubuntu16.04 "${init}" > "${container_id}"'
-
-  # - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm whoami'
-
-  # - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm apt-get update'
-
-  # - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm apt-get -y install ansible python2.7'
-
-  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml -i /etc/ansible/roles/role_under_test/tests/inventory --syntax-check'
-
-  # - 'docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --connection=local --sudo'
-
-  # - idempotence=$(mktemp)
-  # - docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --connection=local --sudo | tee -a ${idempotence}
-  # - >
-  #   tail ${idempotence}
-  #   | grep -q 'changed=0.*failed=0'
-  #   && (echo 'Idempotence test: pass' && exit 0)
-  #   || (echo 'Idempotence test: fail' && exit 1)
+  - >
+    ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo
+    | grep -q 'changed=0.*failed=0'
+    && (echo 'Idempotence test: pass' && exit 0)
+    || (echo 'Idempotence test: fail' && exit 1)
 
 
 notifications:
