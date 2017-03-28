@@ -23,6 +23,8 @@ install:
 
 script:
   # Basic role syntax check
+  - env
+  - find ./
   - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
 
 notifications:
