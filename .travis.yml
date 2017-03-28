@@ -24,8 +24,11 @@ install:
 script:
   # Basic role syntax check
   - env
-  - find ../
+  - cd ../
+  - ln -s $(pwd)/ansible-role-kvm_host $(pwd)/kvm_host
+  - cd -
   - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
+  - ansible-playbook tests/test.yml -i tests/inventory
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
