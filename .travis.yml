@@ -22,16 +22,18 @@ install:
   - printf '[defaults]\nroles_path=../' >> ansible.cfg
   - printf '\nhost_key_checking=False' >> ansible.cfg
 
-script:
-  # Basic role syntax check
   - env
   - ifconfig -a
   - cd ../
   - mv ansible-role-kvm_host kvm_host
   - cd kvm_host
   - find ../
-  - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
+  
   - ansible-playbook tests/test.yml -i tests/inventory
+
+script:
+  # Basic role syntax check
+  - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
