@@ -20,7 +20,7 @@ install:
 
   # Create ansible.cfg with correct roles_path
   - printf '[defaults]\nroles_path = ../' >> ansible.cfg
-  - printf '\host_key_checking = False' >> ansible.cfg
+  - printf '\nhost_key_checking = False' >> ansible.cfg
 
 script:
   # Basic role syntax check
