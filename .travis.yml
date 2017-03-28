@@ -32,6 +32,7 @@ script:
   # - env
   # - whoami
   # - ifconfig -a
+  - lsb_release -a
   - cd ../
   - mv ansible-role-kvm_host kvm_host
   - cd kvm_host

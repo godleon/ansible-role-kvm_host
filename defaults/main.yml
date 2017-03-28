@@ -1,2 +1,16 @@
 ---
 # defaults file for kvm_host
+
+linux_bond_name: 'bond0'
+
+linux_bond_nics:
+  - 'eth0'
+  # - 'nic2'
+  # - 'nic3'
+  # - 'nic4'
+
+linux_bond_vlans:
+  - 123
+  - 456
+
+ovs_bridge_name: 'ovsbr0'
