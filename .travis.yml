@@ -29,6 +29,7 @@ script:
   - cd ../
   - ln -s $(pwd)/ansible-role-kvm_host $(pwd)/kvm_host
   - cd -
+  - find ../
   - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
   - ansible-playbook tests/test.yml -i tests/inventory
 
