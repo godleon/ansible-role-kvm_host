@@ -1,4 +1,5 @@
 ---
+services: docker
 
 # Use the new container infrastructure
 sudo: required
@@ -6,8 +7,8 @@ sudo: required
 env:
   - distro: ubuntu1604
     init: /lib/systemd/systemd
-    run_opts: "--privileged"
-    # run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    #run_opts: "--privileged"
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
     playbook: test.yml
   # - distro: centos7
   #   init: /usr/lib/systemd/systemd
@@ -27,7 +28,7 @@ script:
 
   - 'docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} ubuntu:xenial "${init}" > "${container_id}"'
 
-  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm env'
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm whoami'
 
   - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm sudo apt-get update && sudo apt-get -y install ansible python2.7'
 
