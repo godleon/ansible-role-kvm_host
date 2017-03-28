@@ -28,9 +28,7 @@ script:
 
   - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm env'
 
-  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ip addr show'
-
-  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ip addr apt-get update && apt-get -y install ansible python2.7'
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm apt-get update && apt-get -y install ansible python2.7'
 
   - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --syntax-check'
 
