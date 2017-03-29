@@ -13,7 +13,9 @@ For the time being the following platforms are supported:
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+If you want to provision this role to [Ubuntu 16.04(Xenial)](http://releases.ubuntu.com/16.04/), please follow below instructions to install python 2.7 for Ansbile provision:
+
+> sudo apt-get update && sudo apt-get -y install python2.7
 
 Role Variables
 --------------

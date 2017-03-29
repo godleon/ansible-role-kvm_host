@@ -1,5 +1,0 @@
-auto {{ kvm_host_LinuxBondName }}.{{ item.vlan_id }}
-iface {{ kvm_host_LinuxBondName }}.{{ item.vlan_id } inet static
-        address {{ item.ip }}
-        netmask {{ item.netmask }}
-        vlan-raw-device {{ kvm_host_LinuxBondName }}

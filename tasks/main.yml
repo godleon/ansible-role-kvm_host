@@ -4,11 +4,15 @@
 - include: '{{ ansible_distribution | lower }}_{{ ansible_distribution_version }}.yml'
 
 
-- name: Start Network interfaces
+- name: Start member of bonding interface
   shell: "ifup {{ item }}"
   with_items: '{{ kvm_host_LinuxBondNics }}'
   when: kvm_host_ConfigBondInterface
 
+- name: Start VLAN interfaces
+  shell: "ifup {{ kvm_host_TrunkInterfaceName }}.{{ item.vlan_id }}"
+  with_items: '{{ kvm_host_MultiVlans }}'
+  when: kvm_host_ConfigMultiVlans
 
 - name: Create a bridge named {{ kvm_host_OvsBridgeName }}
   openvswitch_bridge:
@@ -23,20 +27,20 @@
     state: present
   when: kvm_host_ConfigOvsBridge
 
-- name: Define Virtual Network for OVS Bridge (1/3)
+- name: Define KVM virtual network for OVS bridge
   virt_net:
     command: define
     name: '{{ kvm_host_OvsBridgeName }}'
     xml: '{{ lookup("template", "templates/virsh_net.xml.j2") }}'
   when: kvm_host_ConfigOvsBridge
 
-- name: Define Virtual Network for OVS Bridge (2/3)
+- name: Active KVM virtual network
   virt_net:
     state: active
     name: '{{ kvm_host_OvsBridgeName }}'
   when: kvm_host_ConfigOvsBridge
 
-- name: Define Virtual Network for OVS Bridge (3/3)
+- name: Config KVM virtual network to autostart when boot
   virt_net:
     autostart: yes
     name: '{{ kvm_host_OvsBridgeName }}'

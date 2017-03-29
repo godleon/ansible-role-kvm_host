@@ -76,7 +76,7 @@
 
 - name: Configure VLAN interfaces on trunking ports
   template:
-    src: templates/ubuntu_vlan_if.cfg.j2
+    src: templates/ubuntu_bond_nic.cfg.j2
     dest: /etc/network/interfaces.d/{{ kvm_host_TrunkInterfaceName }}.{{ item.vlan_id }}.cfg
   with_items: '{{ kvm_host_MultiVlans }}'
   notify: restart networking.service
