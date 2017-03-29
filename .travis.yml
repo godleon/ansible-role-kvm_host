@@ -34,9 +34,9 @@ script:
   # - whoami
   - ifconfig -a
   - lsb_release -a
-  - cd ../
-  - mv ansible-role-kvm_host kvm_host
-  - cd kvm_host
+  # - cd ../
+  # - mv ansible-role-kvm_host kvm_host
+  # - cd kvm_host
   # - find ../
   
   - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
