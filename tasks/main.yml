@@ -1,7 +1,7 @@
 ---
 # tasks file for kvm_host
 
-- include: {{ ansible_distribution | lower }}-{{ ansible_distribution_version }}.yml
+- include: '{{ ansible_distribution | lower }}_{{ ansible_distribution_version }}.yml'
 
 
 - name: Start Network interfaces

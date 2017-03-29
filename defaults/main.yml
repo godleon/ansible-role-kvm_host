@@ -12,14 +12,15 @@ kvm_host_LinuxBondVlans:
   - 123
   - 456
 
+
+kvm_host_ConfigOvsBridge: false
+kvm_host_OvsBridgeName: 'ovsbr0'
+kvm_host_OVsBridgePortInterface: 'bond0'
+
+
 kvm_host_ConfigMultiVlans: false
 kvm_host_MultiVlans:
   - { 'vlan_id': 121, 'ip': '10.12.1.254', 'netmask': '255.255.255.0' }
   - { 'vlan_id': 122, 'ip': '10.12.2.254', 'netmask': '255.255.255.0' }
   - { 'vlan_id': 123, 'ip': '10.12.3.254', 'netmask': '255.255.255.0' }
 kvm_host_TrunkInterfaceName: 'bond0'
-
-
-kvm_host_ConfigOvsBridge: false
-kvm_host_OvsBridgeName: 'ovsbr0'
-kvm_host_OVsBridgePortInterface: 'bond0'
