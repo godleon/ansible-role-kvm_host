@@ -50,4 +50,4 @@ script:
 notifications:
   webhooks: 
     - https://galaxy.ansible.com/api/v1/notifications/
-    - https://webhooks.gitter.im/e/6c04bd240e88d8acaa1b
+    - https://webhooks.gitter.im/e/ef5348b4f91dc283a680
