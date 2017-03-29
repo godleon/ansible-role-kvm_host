@@ -48,4 +48,6 @@ script:
 
 
 notifications:
-  webhooks: https://galaxy.ansible.com/api/v1/notifications/
+  webhooks: 
+    - https://galaxy.ansible.com/api/v1/notifications/
+    - https://webhooks.gitter.im/e/6c04bd240e88d8acaa1b
