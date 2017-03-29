@@ -44,3 +44,6 @@ notifications:
   webhooks: 
     - https://galaxy.ansible.com/api/v1/notifications/
     - https://webhooks.gitter.im/e/ef5348b4f91dc283a680
+  slack:
+    rooms:
+      - qcttw:7izMcpQ7tyFqGvPKgB1qflo9#ci_message
