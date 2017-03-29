@@ -1,7 +1,7 @@
 galaxy_info:
   author: godleon
-  description: Deploy KVM virtualization environment with Open vSwitch on Linux bonding(mode=6)
-  company: your company (optional)
+  description: Deploy KVM virtualization environment with VLAN support (integrated with Open vSWitch and Linux Bonding mode 6)
+  company:
 
   # If the issue tracker for your role is not on github, uncomment the
   # next line and provide a value
@@ -208,9 +208,12 @@ galaxy_info:
   #  - Any
 
   galaxy_tags:
-    - KVM
-    - Open vSwitch
-    - Linux Bonding
+    - system
+    - virtualization
+    - kvm
+    - openvswitch
+    - networking
+    - vlan
     # List tags for your role here, one per line. A tag is
     # a keyword that describes and categorizes the role.
     # Users find roles by searching for tags. Be sure to

@@ -3,7 +3,12 @@
 Role Name
 =========
 
-Deploy KVM virtualization environment on Ubuntu 16.04(Xenial). (currently)
+Deploy KVM virtualization environment with VLAN support (integrated with Open vSWitch and Linux Bonding mode 6)
+
+For the time being the following platforms are supported:
+
+- [Ubuntu 16.04(Xenial)](http://releases.ubuntu.com/16.04/)
+
 
 Requirements
 ------------
