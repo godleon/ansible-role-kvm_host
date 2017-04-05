@@ -1,47 +1,18 @@
 ---
 # tasks file for kvm_host
 
-- include: '{{ ansible_distribution | lower }}_{{ ansible_distribution_version }}.yml'
+- include: '{{ ansible_distribution | lower }}.yml'
 
 
-- name: Start member of bonding interface
-  shell: "ifup {{ item }}"
-  with_items: '{{ kvm_host_LinuxBondNics }}'
-  when: kvm_host_ConfigBondInterface
-
-- name: Start VLAN interfaces
-  shell: "ifup {{ kvm_host_TrunkInterfaceName }}.{{ item.vlan_id }}"
-  with_items: '{{ kvm_host_MultiVlans }}'
-  when: kvm_host_ConfigMultiVlans
-
-- name: Create a bridge named {{ kvm_host_OvsBridgeName }}
-  openvswitch_bridge:
-    bridge: '{{ kvm_host_OvsBridgeName }}'
+- name: Enable kernel modules - kvm
+  modprobe:
+    name: 'kvm'
     state: present
-  when: kvm_host_ConfigOvsBridge
+  when: ansible_virtualization_type != 'docker'
 
-- name: Creates port {{ kvm_host_LinuxBondName }} on bridge {{ kvm_host_OvsBridgeName }}
-  openvswitch_port:
-    bridge: '{{ kvm_host_OvsBridgeName }}'
-    port: '{{ kvm_host_OVsBridgePortInterface }}'
+
+- name: Enable kernel modules - kvm_intel
+  modprobe:
+    name: 'kvm_intel'
     state: present
-  when: kvm_host_ConfigOvsBridge
-
-- name: Define KVM virtual network for OVS bridge
-  virt_net:
-    command: define
-    name: '{{ kvm_host_OvsBridgeName }}'
-    xml: '{{ lookup("template", "templates/virsh_net.xml.j2") }}'
-  when: kvm_host_ConfigOvsBridge
-
-- name: Active KVM virtual network
-  virt_net:
-    state: active
-    name: '{{ kvm_host_OvsBridgeName }}'
-  when: kvm_host_ConfigOvsBridge
-
-- name: Config KVM virtual network to autostart when boot
-  virt_net:
-    autostart: yes
-    name: '{{ kvm_host_OvsBridgeName }}'
-  when: kvm_host_ConfigOvsBridge
+  when: ansible_virtualization_type != 'docker'

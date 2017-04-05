@@ -1,0 +1,18 @@
+- name: Install KVM-related packages
+  apt:
+    name: '{{ item }}'
+    state: 'latest'
+    update_cache: 'yes'
+  with_items:
+    - 'libvirt-bin'
+    - 'netcat-openbsd'
+    - 'gawk'
+    - 'qemu-system'
+    - 'pm-utils'
+    - 'ebtables'
+    - 'qemu-kvm'
+    - 'virtinst'
+    - 'bridge-utils'
+    - 'cpu-checker'
+    - 'python-lxml'
+  when: ansible_virtualization_type != 'docker'

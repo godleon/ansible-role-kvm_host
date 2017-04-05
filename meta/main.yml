@@ -1,6 +1,6 @@
 galaxy_info:
   author: godleon
-  description: Deploy KVM virtualization environment with VLAN support (integrated with Open vSWitch and Linux Bonding mode 6)
+  description: Deploy KVM virtualization environment
   company:
 
   # If the issue tracker for your role is not on github, uncomment the
@@ -136,7 +136,7 @@ galaxy_info:
   #  - quantal
   #  - raring
   #  - saucy
-  #  - trusty
+    - trusty
   #  - utopic
   #  - vivid
   #  - wily
@@ -211,9 +211,6 @@ galaxy_info:
     - system
     - virtualization
     - kvm
-    - openvswitch
-    - networking
-    - vlan
     # List tags for your role here, one per line. A tag is
     # a keyword that describes and categorizes the role.
     # Users find roles by searching for tags. Be sure to

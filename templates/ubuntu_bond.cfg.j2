@@ -1,9 +1,0 @@
-# The primary network interface
-auto {{ kvm_host_LinuxBondName }}
-iface {{ kvm_host_LinuxBondName }} inet manual
-      pre-up ifconfig $IFACE up
-      post-down ifconfig $IFACE down
-      bond-slaves none
-      bond-mode 6
-      bond-miimon 100
-

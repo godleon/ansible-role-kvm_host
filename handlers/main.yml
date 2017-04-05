@@ -3,11 +3,3 @@
 
 - name: restart libvirtd
   service: name=libvirt-bin.service state=restarted
-
-- name: restart openvswitch
-  service: name=openvswitch-switch.service state=restarted
-
-- name: restart networking.service
-  service:
-    name: networking.service
-    state: restarted
