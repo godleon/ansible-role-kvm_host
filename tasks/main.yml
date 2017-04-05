@@ -3,16 +3,23 @@
 
 - include: '{{ ansible_distribution | lower }}.yml'
 
+- name: Check if module(kvm) is present
+  shell: 'lsmod | grep kvm | wc -l'
+  register: module_is_exist
 
 - name: Enable kernel modules - kvm
   modprobe:
     name: 'kvm'
     state: present
-  when: ansible_virtualization_type != 'docker'
+  when: ansible_virtualization_type != 'docker' and module_is_exist == 1
 
+
+- name: Check if module(kvm_intel) is present
+  shell: 'lsmod | grep kvm_intel | wc -l'
+  register: module_is_exist
 
 - name: Enable kernel modules - kvm_intel
   modprobe:
     name: 'kvm_intel'
     state: present
-  when: ansible_virtualization_type != 'docker'
+  when: ansible_virtualization_type != 'docker' and module_is_exist == 1
