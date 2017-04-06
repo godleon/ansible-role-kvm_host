@@ -13,10 +13,15 @@
     state: present
   when: ansible_virtualization_type != 'docker' and module_is_exist.stdout == 1
 
+- debug:
+    var: module_is_exist
 
 - name: Check if module(kvm_intel) is present
   shell: 'lsmod | grep kvm_intel | wc -l'
   register: module_is_exist
+
+- debug:
+    var: module_is_exist
 
 - name: Enable kernel modules - kvm_intel
   modprobe:
