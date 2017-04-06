@@ -5,7 +5,7 @@
 
 
 - name: Check if module(kvm) is present
-  shell: '(lsmod | grep kvm | wc -l) 2>/dev/null || echo 0'
+  shell: '(lsmod | grep -q kvm) 2>/dev/null || echo 0'
   register: module_is_exist
 
 - debug:
@@ -20,7 +20,7 @@
 
 
 - name: Check if module(kvm_intel) is present
-  shell: '(lsmod | grep kvm_intel | wc -l) 2>/dev/null || echo 0'
+  shell: '(lsmod | grep -q kvm_intel) 2>/dev/null || echo 0'
   register: module_is_exist
 
 - debug:
