@@ -11,7 +11,7 @@
   modprobe:
     name: 'kvm'
     state: present
-  when: ansible_virtualization_type != 'docker' and module_is_exist == 1
+  when: ansible_virtualization_type != 'docker' and module_is_exist.stdout == 1
 
 
 - name: Check if module(kvm_intel) is present
@@ -22,4 +22,4 @@
   modprobe:
     name: 'kvm_intel'
     state: present
-  when: ansible_virtualization_type != 'docker' and module_is_exist == 1
+  when: ansible_virtualization_type != 'docker' and module_is_exist.stdout == 1
