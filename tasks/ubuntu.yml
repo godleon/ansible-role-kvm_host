@@ -15,4 +15,5 @@
     - 'bridge-utils'
     - 'cpu-checker'
     - 'python-lxml'
+  notify: restart libvirtd
   when: ansible_virtualization_type != 'docker'
