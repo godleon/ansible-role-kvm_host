@@ -2,4 +2,4 @@
 # handlers file for kvm_host
 
 - name: restart libvirtd
-  service: name=libvirt-bin.service state=restarted
+  service: name=libvirt-bin state=restarted
