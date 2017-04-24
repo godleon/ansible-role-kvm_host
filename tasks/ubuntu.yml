@@ -18,3 +18,7 @@
     - 'libguestfs-tools'
   notify: restart libvirtd
   when: ansible_virtualization_type != 'docker'
+
+- name: fix "/usr/bin/supermin-helper error" when using libguestfs-tools
+  command: "update-guestfs-appliance"
+  when: ansible_virtualization_type != 'docker'
