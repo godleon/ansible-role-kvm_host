@@ -26,6 +26,16 @@
 #    dest: /tmp/ipxe-qemu_1.0.0+git-20150424.a25a16d-1ubuntu2_all.deb
 #  when: ansible_virtualization_type != 'docker' and ansible_distribution_release == 'trusty'
 
+- name: modify libvirt directory permissions
+  file:
+    path: '/var/lib/libvirt/images'
+    state: directory
+    recurse: 'yes'
+    owner: libvirt-qemu
+    group: kvm
+    mode: 0755
+  when: ansible_virtualization_type != 'docker'
+
 # only for ubuntu 14.04
 - name: update ipex_qemu (2/3) => install package
   apt:
