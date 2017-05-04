@@ -19,6 +19,23 @@
   notify: restart libvirtd
   when: ansible_virtualization_type != 'docker'
 
+- name: update ipex_qemu (1/3) => download package
+  get_url:
+    url: http://security.ubuntu.com/ubuntu/pool/main/i/ipxe/ipxe-qemu_1.0.0+git-20150424.a25a16d-1ubuntu2_all.deb
+    dest: /tmp/ipxe-qemu_1.0.0+git-20150424.a25a16d-1ubuntu2_all.deb
+  when: ansible_virtualization_type != 'docker' and ansible_distribution_release == 'trusty'
+
+- name: update ipex_qemu (2/3) => install package
+  apt:
+    deb: /tmp/ipxe-qemu_1.0.0+git-20150424.a25a16d-1ubuntu2_all.deb
+  when: ansible_virtualization_type != 'docker' and ansible_distribution_release == 'trusty'
+
+- name: update ipex_qemu (3/3) => remove package
+  file:
+    path: /tmp/ipxe-qemu_1.0.0+git-20150424.a25a16d-1ubuntu2_all.deb
+    state: absent
+  when: ansible_virtualization_type != 'docker' and ansible_distribution_release == 'trusty'
+
 - name: fix "/usr/bin/supermin-helper error" when using libguestfs-tools
   command: "update-guestfs-appliance"
   when: ansible_virtualization_type != 'docker'
