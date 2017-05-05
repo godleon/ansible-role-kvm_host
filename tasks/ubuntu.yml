@@ -1,5 +1,4 @@
 - name: Install KVM-related 
-s
   apt:
     name: '{{ item }}'
     state: 'latest'
