@@ -35,6 +35,7 @@
     recursive: yes
     default: yes
     state: present
+  when: ansible_virtualization_type != 'docker'
   
 - name: modify libvirt directory permissions (2/2)
   acl:
