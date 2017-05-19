@@ -1,0 +1,84 @@
+
+- name: configure external package repositories
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "epel-release"
+    - "https://centos7.iuscommunity.org/ius-release.rpm"
+    - "http://rpms.remirepo.net/enterprise/remi-release-7.rpm"
+    - "https://mirror.webtatic.com/yum/el7/webtatic-release.rpm"
+    - "http://dl.atrpms.net/all/atrpms-repo-7-7.el7.x86_64.rpm"
+    - "http://repository.it4i.cz/mirrors/repoforge/redhat/el7/en/x86_64/rpmforge/RPMS/rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm"
+
+
+- name: Add repository for new version of KVM
+  yum_repository:
+    name: kvm_2.x
+    description: KVM 2.x Repository
+    file: kvm_2.x_repo
+    baseurl: http://mirror.centos.org/centos-7/7/virt/x86_64/kvm-common/
+    gpgcheck: no
+
+- name: install KVM-related packages
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - "bash-completion"
+    - "bash-completion-extras"
+    - "qemu-kvm-common-ev"
+    - "qemu-kvm-ev"
+    - "qemu-img-ev"
+    - "qemu-kvm-tools-ev"
+    - "qemu-system-x86"
+    - "bridge-utils"
+    - "libguestfs-tools-c"
+    - "net-tools"
+    - "libvirt"
+    - "libvirt-client"
+    - "libvirt-python"
+  notify: "restart libvirtd in {{ ansible_os_family }} family"
+  
+
+- name: Check if module(kvm) is present
+  shell: '(lsmod | grep -q kvm) 2>/dev/null || echo 0'
+  register: module_is_exist
+
+- name: disable kernel module(kvm) for enabling nested virtualization
+  modprobe:
+    name: 'kvm'
+    state: absent
+  when:  module_is_exist.stdout == 1
+
+- name: Check if module(kvm_intel) is present
+  shell: '(lsmod | grep -q kvm_intel) 2>/dev/null || echo 0'
+  register: module_is_exist
+
+- name: disable kernel module(kvm_intel) for enabling nested virtualization
+  modprobe:
+    name: 'kvm_intel'
+    state: absent
+  when: module_is_exist.stdout == 1
+
+- name: temporary modify the file permission
+  file:
+    path: /sys/module/kvm_intel/parameters/nested
+    mode: 0644
+
+- name: enable nested virtualization
+  shell: "echo 'Y' > /sys/module/kvm_intel/parameters/nested"
+
+- name: recover the file permission
+  file:
+    path: /sys/module/kvm_intel/parameters/nested
+    mode: 0444
+
+- name: enable intel_iommu
+  lineinfile:
+    dest: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX='
+    line: 'GRUB_CMDLINE_LINUX="crashkernel=auto rhgb quiet intel_iommu=on"'
+    
+- name: generate new grub.cfg
+  command: "grub2-mkconfig -o /boot/grub2/grub.cfg"

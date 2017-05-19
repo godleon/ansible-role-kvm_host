@@ -2,6 +2,7 @@
 # tasks file for kvm_host
 
 - include: '{{ ansible_distribution | lower }}.yml'
+  when: ansible_virtualization_type != 'docker'
 
 
 - name: Check if module(kvm) is present

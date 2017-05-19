@@ -1,5 +1,8 @@
 ---
 # handlers file for kvm_host
 
-- name: restart libvirtd
+- name: restart libvirtd in Debian family
   service: name=libvirt-bin state=restarted
+
+- name: restart libvirtd in RedHat family
+  service: name=libvirtd state=restarted
