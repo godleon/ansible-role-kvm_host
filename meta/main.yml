@@ -125,9 +125,6 @@ galaxy_info:
   #  - 9.1
   #  - 9.2
   #  - 9.3
-  - name: CentOS
-    versions:
-    - 7
   - name: Ubuntu
     versions:
   #  - all
@@ -159,12 +156,12 @@ galaxy_info:
   #  versions:
   #  - all
   #  - any
-  #- name: EL
-  #  versions:
+  - name: EL
+    versions:
   #  - all
   #  - 5
   #  - 6
-  #  - 7
+    - 7
   #- name: Windows
   #  versions:
   #  - all
