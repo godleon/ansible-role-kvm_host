@@ -1,0 +1,28 @@
+# 註冊 Red Hat CDN
+- name: register to Red Hat Content Delivery Network
+  redhat_subscription: >
+    state=present 
+    username={{ kvm_host.redhat_account }} 
+    password={{ kvm_host.redhat_password }}
+    pool='^Red Hat Virtualization Business Partner Supported NFR$' 
+    autosubscribe=true
+  when: 
+    - kvm_host.redhat_account != 'YOUR_REDHAT_ACCOUNT' and kvm_host.redhat_password != 'YOUR_REDHAT_PASSWORD'
+
+- name: disable all repository
+  shell: subscription-manager repos --disable=*
+  when: 
+    - kvm_host.redhat_account != 'YOUR_REDHAT_ACCOUNT' and kvm_host.redhat_password != 'YOUR_REDHAT_PASSWORD'
+
+# 啟用與 OpenStack OSP10 相關的 repository
+- name: active repositories of Red Hat OSP10
+  shell: subscription-manager repos --enable=rhel-7-server-rpms --enable=rhel-7-server-extras-rpms --enable=rhel-7-server-rh-common-rpms --enable=rhel-ha-for-rhel-7-server-rpms --enable=rhel-7-server-rhv-4-mgmt-agent-rpms --enable=rhel-7-fast-datapath-rpms
+  when: 
+    - not undercloud.use_local_repo
+
+# - name: install the latest version of Apache
+#   yum:
+#     name: httpd
+#     state: latest
+#   with_items:
+#     - 

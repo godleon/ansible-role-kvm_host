@@ -1,2 +1,7 @@
 ---
 # defaults file for kvm_host
+
+kvm_host:
+  redhat_account: 'YOUR_REDHAT_ACCOUNT'
+  redhat_password: 'YOUR_REDHAT_PASSWORD'
+
