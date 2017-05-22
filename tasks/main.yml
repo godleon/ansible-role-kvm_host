@@ -5,30 +5,47 @@
   when: ansible_virtualization_type != 'docker'
 
 
-- name: Check if module(kvm) is present
-  shell: '(lsmod | grep -q kvm) 2>/dev/null || echo 0'
-  register: module_is_exist
 
-# - debug:
-#     var: module_is_exist
+- name: automatically load kvm & kvm_intel kernel modules (1/2)
+  file:
+    path: "/etc/modules-load.d/{{ item }}.conf"
+    mode: 0644
+    state: touch
+  with_items:
+    - "kvm"
+    - "kvm_intel"
+  when: ansible_virtualization_type != 'docker'
+  
+- name: automatically load kvm & kvm_intel kernel modules (2/2)
+  lineinfile:
+    dest: "/etc/modules-load.d/{{ item}}.conf"
+    line: '{{ item }}'
+  with_items:
+    - "kvm"
+    - "kvm_intel"
+  when: ansible_virtualization_type != 'docker'
 
-- name: Enable kernel modules - kvm
-  modprobe:
-    name: 'kvm'
-    state: present
-  when: ansible_virtualization_type != 'docker' and module_is_exist.stdout == 1
+
+- name: enable kvm nested virtualization
+  lineinfile:
+    dest: "/etc/modprobe.d/qemu-system-x86.conf"
+    line: 'options kvm_intel nested=1'
+  when: ansible_distribution == "Debian" and ansible_virtualization_type != 'docker'
+
+- name: enable kvm nested virtualization
+  lineinfile:
+    dest: "/etc/modprobe.d/kvm.conf"
+    line: 'options kvm_intel nested=1'
+  when: ansible_distribution == "RedHat" and ansible_virtualization_type != 'docker'
 
 
+- name: reload kernel module
+  service: name=systemd-modules-load.service state=restarted
+  when: ansible_virtualization_type != 'docker'
 
-- name: Check if module(kvm_intel) is present
-  shell: '(lsmod | grep -q kvm_intel) 2>/dev/null || echo 0'
-  register: module_is_exist
+- name: check installation status
+  command: virt-host-validate
+  register: cmd_output
 
-# - debug:
-#     var: module_is_exist
-
-- name: Enable kernel modules - kvm_intel
-  modprobe:
-    name: 'kvm_intel'
-    state: present
-  when: ansible_virtualization_type != 'docker' and module_is_exist.stdout == 1
+- debug:
+    var: cmd_output.stdout_lines

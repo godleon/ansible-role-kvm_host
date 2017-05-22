@@ -41,39 +41,6 @@
   notify: "restart libvirtd in {{ ansible_os_family }} family"
   
 
-- name: Check if module(kvm) is present
-  shell: '(lsmod | grep -q kvm) 2>/dev/null || echo 0'
-  register: module_is_exist
-
-- name: disable kernel module(kvm) for enabling nested virtualization
-  modprobe:
-    name: 'kvm'
-    state: absent
-  when:  module_is_exist.stdout == 1
-
-- name: Check if module(kvm_intel) is present
-  shell: '(lsmod | grep -q kvm_intel) 2>/dev/null || echo 0'
-  register: module_is_exist
-
-- name: disable kernel module(kvm_intel) for enabling nested virtualization
-  modprobe:
-    name: 'kvm_intel'
-    state: absent
-  when: module_is_exist.stdout == 1
-
-- name: temporary modify the file permission
-  file:
-    path: /sys/module/kvm_intel/parameters/nested
-    mode: 0644
-
-- name: enable nested virtualization
-  shell: "echo 'Y' > /sys/module/kvm_intel/parameters/nested"
-
-- name: recover the file permission
-  file:
-    path: /sys/module/kvm_intel/parameters/nested
-    mode: 0444
-
 - name: enable intel_iommu
   lineinfile:
     dest: /etc/default/grub
