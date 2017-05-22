@@ -5,7 +5,6 @@
   when: ansible_virtualization_type != 'docker'
 
 
-
 - name: automatically load kvm & kvm_intel kernel modules (1/2)
   file:
     path: "/etc/modules-load.d/{{ item }}.conf"
@@ -46,6 +45,8 @@
 - name: check installation status
   command: virt-host-validate
   register: cmd_output
+  when: ansible_virtualization_type != 'docker'
 
 - debug:
     var: cmd_output.stdout_lines
+  when: ansible_virtualization_type != 'docker'
