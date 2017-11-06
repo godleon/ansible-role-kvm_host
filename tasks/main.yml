@@ -44,6 +44,7 @@
 
 - name: check installation status
   command: virt-host-validate
+  ignore_errors: yes
   register: cmd_output
   when: ansible_virtualization_type != 'docker'
 
